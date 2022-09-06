@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ labels:
+   run: busybox
+   app.kubernetes.io/instance: privileged-admin-container
+ name: busybox
+ namespace: default
+spec:
+ nodeName: <fill-in>
+ containers:
+ - image: docker.io/library/busybox
+   imagePullPolicy: Always
+   name: busybox
+   stdin: true
+   stdinOnce: true
+   tty: true
+   volumeMounts:
+   - mountPath: /node
+     name: node
+     readOnly: true # We use a readonly volume mount here. If you need to make changes to the nodes’s filesystem you can remove this line.
+ volumes:
+   - name: node
+     hostPath:
+       path: /

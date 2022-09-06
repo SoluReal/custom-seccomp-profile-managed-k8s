@@ -1,38 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: nginx-deployment
- labels:
-   app: nginx
+  name: nginx-deployment
+  labels:
+    app: nginx
 spec:
- selector:
-   matchLabels:
-     app: nginx
- template:
-   metadata:
-     labels:
-       app: nginx
-   spec:
-     volumes:
-     - name: seccomp-profiles
-       hostPath:
-         path: /var/lib/kubelet/seccomp
-     initContainers:
-     - name: seccomp-profile-initializer
-       image: seccomp-profile-initializer # <--- change the image and point it to your own registry.
-       securityContext:
-         allowPrivilegeEscalation: false
-         runAsUser: 0
-         runAsGroup: 0
-       volumeMounts:
-       - mountPath: /var/lib/kubelet/seccomp
-         name: seccomp-profiles
-     containers:
-     - name: nginx 
-       image: nginx 
-       ports:
-       - containerPort: 80
-       securityContext:
-         seccompProfile:
-           type: Localhost
-           localhostProfile: audit.json
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: seccomp-profiles
+          hostPath:
+            path: /var/lib/kubelet/seccomp
+      initContainers:
+        - name: seccomp-profile-initializer
+          image: seccomp-profile-initializer # <--- change the image and point it to your own registry.
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
+            runAsGroup: 0
+          volumeMounts:
+            - mountPath: /var/lib/kubelet/seccomp
+              name: seccomp-profiles
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          securityContext:
+            seccompProfile:
+              type: Localhost
+              localhostProfile: audit.json
